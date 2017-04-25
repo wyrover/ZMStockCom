@@ -1,0 +1,1 @@
+ZMStockCom.exe /RegServerPerUser

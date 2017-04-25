@@ -1,0 +1,11 @@
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\bin\Release\CSharp_Demo.exe
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\bin\Release\CSharp_Demo.pdb
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\bin\Release\Interop.ZMStockCom.dll
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\Interop.ZMStockCom.dll
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.csproj.ResolveComReference.cache
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.TradeDemo.resources
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.Properties.Resources.resources
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.csproj.GenerateResource.Cache
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.exe
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.pdb
+M:\Src\Sdk\ZMStockCom\CSharp_Demo\obj\x86\Release\CSharp_Demo.csprojResolveAssemblyReference.cache
