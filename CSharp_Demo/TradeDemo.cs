@@ -1,5 +1,5 @@
 ﻿/// 定义是否演示同步操作，包括同步登录和同步委托
-//#define SYNC_OPT
+#define SYNC_OPT
 
 using System;
 using System.Collections.Generic;

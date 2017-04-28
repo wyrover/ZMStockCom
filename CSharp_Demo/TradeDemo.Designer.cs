@@ -292,7 +292,7 @@
             this.Controls.Add(this.SERVERADDR);
             this.Controls.Add(this.label1);
             this.Name = "TradeDemo";
-            this.Text = "佐罗金股票交易COM组件功能演示";
+            this.Text = "佐罗金股票交易COM组件C#调用功能演示";
             this.Load += new System.EventHandler(this.TradeDemo_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
