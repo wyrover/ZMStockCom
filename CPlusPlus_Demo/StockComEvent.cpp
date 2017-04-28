@@ -359,10 +359,11 @@ STDMETHODIMP CStockComEvent::OrderErrEvent(ULONG nReqID,BSTR bstrErrInfo)
 	HRESULT hRet(E_FAIL);
 	if(0 == nReqID)
 		return hRet;
+	m_strErrInfo = bstrErrInfo;
 	if(NULL != m_hParentWnd && ::IsWindow(m_hParentWnd))
 	{
 		/// 确保字符串没有被释放
-		::SendMessage(m_hParentWnd,WM_TRADEEVENT_ORDERERROR,nReqID,(LPARAM)bstrErrInfo);
+		::SendMessage(m_hParentWnd,WM_TRADEEVENT_ORDERERROR,nReqID,(LPARAM)m_nTradeIndex);
 	}
 	else
 	{

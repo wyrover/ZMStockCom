@@ -6,8 +6,18 @@
 #include "resource.h"
 #include "MainDlg.h"
 
+#ifndef WIN64
 /// 定义是否同步处理数据
-//#define	ZM_TDXSERVER_SYNC
+#define	ZM_TDXSERVER_SYNC
+#endif
+
+/// 定义模拟盘
+#define	ZM_TDXSERVER_DEMO
+
+/// 华福证券版
+//#define	ZM_BROKER_HFZQ
+/// 中信证券版
+//#define	ZM_BROKER_ZXZQ
 
 void CMainDlg::AdviseTradeClient(int nIndex)
 {
@@ -88,7 +98,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	m_nTradeEventCookie[1] = 0;
 	m_spiTradeClientEvent[1] = NULL;
 
-	/// 创建COM对象前请先注册，管理员权限执行ZMStockCom.exe /RegServer，卸载执行ZMStockCom.exe /UnregServer
+	/// 创建COM对象前请先注册，管理员权限执行ZMStockCom.exe /RegServer(为当前账号注册，如果需要，请注册为每一个用户，参数是RegServerPerUser)
+	/// 卸载执行ZMStockCom.exe /UnregServer(为当前账号注册，如果注册成了每一个用户，参数是UnregServerPerUser)
+	/// 如果创建失败，请先检查是否注册成功，检查运行所需要的依赖DLL是否都和本程序在一个目录
 	HRESULT hRet = m_spiTrade[0].CreateInstance(__uuidof(StockTrade));
 	ATLASSERT(m_spiTrade[0]);
 	if(NULL != m_spiTrade[0])
@@ -103,12 +115,30 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 		m_spiTrade[0]->Init(CComBSTR(L"6.4"),1);
 	}
 
-	/// 如果创建失败，请先检查是否注册成功，检查运行所需要的依赖DLL是否都和本程序在一个目录
+#ifdef ZM_BROKER_HFZQ
+	this->GetDlgItem(IDC_EDIT_TRADESERVERADDR).SetWindowText(L"tdxwt.hfzq.com.cn");
+	this->GetDlgItem(IDC_EDIT_TRADESERVERPORT).SetWindowText(L"8081");
+	this->GetDlgItem(IDC_EDIT_YYBID).SetWindowText(L"1");
+	/// 设置实际的登录账号和交易账号
+	this->GetDlgItem(IDC_EDIT_LOGINACCOUNTNO).SetWindowText(L"");
+	this->GetDlgItem(IDC_EDIT_TRADEACCOUNT).SetWindowText(L"");
+#endif
+#ifdef ZM_BROKER_ZXZQ
+	this->GetDlgItem(IDC_EDIT_TRADESERVERADDR).SetWindowText(L"180.153.18.180");
+	this->GetDlgItem(IDC_EDIT_TRADESERVERPORT).SetWindowText(L"7708");
+	this->GetDlgItem(IDC_EDIT_YYBID).SetWindowText(L"1");
+	/// 设置实际的登录账号和交易账号
+	this->GetDlgItem(IDC_EDIT_LOGINACCOUNTNO).SetWindowText(L"");
+	this->GetDlgItem(IDC_EDIT_TRADEACCOUNT).SetWindowText(L"");
+#endif
+#ifdef ZM_TDXSERVER_DEMO
 	this->GetDlgItem(IDC_EDIT_TRADESERVERADDR).SetWindowText(L"mock.tdx.com.cn");
 	this->GetDlgItem(IDC_EDIT_TRADESERVERPORT).SetWindowText(L"7708");
 	this->GetDlgItem(IDC_EDIT_YYBID).SetWindowText(L"9000");
 	this->GetDlgItem(IDC_EDIT_LOGINACCOUNTNO).SetWindowText(L"1852983998@qq.com");
 	this->GetDlgItem(IDC_EDIT_TRADEACCOUNT).SetWindowText(L"001001001020115");
+#endif
+
 	this->GetDlgItem(IDC_EDIT_TRADEPASSWORD).SetWindowText(L"");
 	this->GetDlgItem(IDC_EDIT_COMMPASSWORD).SetWindowText(L"");
 	this->GetDlgItem(IDC_EDIT_STOCKCODE).SetWindowText(L"000001");
@@ -174,7 +204,7 @@ LRESULT CMainDlg::OnLoginReturn(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOO
 			spiRecord->GetJsonString(&bstrJsonVal);
 			this->MessageBox(bstrJsonVal.m_str);
 			bstrJsonVal.Empty();
-			/// 股东代码对象，内部会缓存数据备用，所以请尽量不要调用Clear清空，避免影响底层功能
+			/// 股东代码对象，底层会缓存数据备用，所以请尽量不要调用Clear清空，避免影响底层功能
 //			spiRecord->Clear();
 			spiRecord = NULL;
 		}
@@ -253,9 +283,6 @@ LRESULT CMainDlg::OnOrderError(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL
 {
 	if(NULL == m_spiTradeClientEvent[lParam] || NULL == m_spiTrade[lParam])
 		return 0;/// 对象已经释放
-	CComBSTR bstrErrInfo((BSTR)lParam);
-	this->MessageBox(bstrErrInfo.m_str);
-	bstrErrInfo.Empty();
 	return 0;
 }
 
@@ -422,7 +449,22 @@ LRESULT CMainDlg::OnBnClickedInit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
 #ifdef ZM_TDXSERVER_DEMO
 	m_spiTrade[0]->put_BrokerType(BROKERTYPE_MNCS);
 #else
+#ifdef ZM_BROKER_HFZQ
+	m_spiTrade[0]->put_BrokerType(BROKERTYPE_HFZQ);
+#endif
+#ifdef ZM_BROKER_ZXZQ
 	m_spiTrade[0]->put_BrokerType(BROKERTYPE_ZXZQ);
+#endif
+#endif
+
+#ifdef ZM_TDXSERVER_DEMO
+	m_spiTrade[0]->put_AccountType(LOGINIACCOUNTTYPE_MNCS);
+#endif
+#ifdef ZM_BROKER_HFZQ
+	m_spiTrade[0]->put_AccountType(LOGINIACCOUNTTYPE_CUSTOMER);
+#endif
+#ifdef ZM_BROKER_ZXZQ
+	m_spiTrade[0]->put_AccountType(LOGINIACCOUNTTYPE_CAPITAL);
 #endif
 
 #ifndef ZM_ADV_VERSION
@@ -437,9 +479,7 @@ LRESULT CMainDlg::OnBnClickedInit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
 	m_spiTrade[0]->put_CurServerHost(bstrServerAddr);
 	/// 设置交易服务器端口
 	m_spiTrade[0]->put_CurServerPort((USHORT)StrToNum(bstrServerPort.m_str));
-	m_spiTrade[0]->put_AccountType(LOGINIACCOUNTTYPE_MNCS);
 #else
-	m_spiTrade[0]->put_AccountType(LOGINIACCOUNTTYPE_CAPITAL);
 	/// 高级版，通过JSON传入多个服务器地址，底层支持同时多个连接，一旦发现某个服务器操作故障，可以随时切换使用
 	CString strJsonServer;
 	/// 主机IP，端口，main表示主要使用使用，其他为备用，设置5个服务器地址，第一个主用
@@ -453,7 +493,7 @@ LRESULT CMainDlg::OnBnClickedInit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWn
 	/// 设置登录账户
 	m_spiTrade[0]->put_LoginID(bstrLoginID);
 	if(bstrTradeAccount.Length())
-		m_spiTrade[0]->put_TradeAccount(bstrTradeAccount);/// 此值一般和bstrLoginID一样，可以不设置
+		m_spiTrade[0]->put_TradeAccount(bstrTradeAccount);/// 如果用资金账号登录，此值一般和登录账号一样，可以不设置
 	/// 设置交易密码
 	m_spiTrade[0]->put_TradePassword(bstrTradePassword);
 	/// 设置通信密码

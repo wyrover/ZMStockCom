@@ -28,6 +28,9 @@ protected:
 	/// ·µ»ØÊı¾İ»º´æ
 	ITradeRecordPtr	m_spiTradeRecord;
 
+	/// ´íÎóÃèÊö
+	CString			m_strErrInfo;
+
 public:
 	CStockComEvent()
 		:m_hParentWnd(NULL)

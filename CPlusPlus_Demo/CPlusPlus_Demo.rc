@@ -7,7 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include "WTL\\atlres.h"
+#include "WTL//atlres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -46,7 +46,7 @@ END
 
 IDD_MAINDLG DIALOGEX 0, 0, 430, 174
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
-CAPTION "CPlusPlus_Demo"
+CAPTION "佐罗金股票交易COM组件C++调用展示"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     EDITTEXT        IDC_EDIT_TRADEPASSWORD,85,53,110,12,ES_PASSWORD | ES_AUTOHSCROLL
